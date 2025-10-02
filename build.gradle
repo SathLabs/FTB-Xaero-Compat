@@ -1,0 +1,91 @@
+plugins {
+    id 'dev.architectury.loom' version '1.11-SNAPSHOT' apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'com.gradleup.shadow' version '8.3.6' apply false
+}
+
+architectury {
+    minecraft = project.minecraft_version
+}
+
+allprojects {
+    group = rootProject.maven_group
+    version = rootProject.mod_version
+}
+
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
+    apply plugin: 'maven-publish'
+
+    base {
+        archivesName = "$rootProject.archives_name-$project.name"
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = "CurseMaven"
+            url = "https://cursemaven.com"
+        }
+        maven { // EMI
+            name = "TerraformersMC Maven"
+            url = "https://maven.terraformersmc.com/"
+        }
+        maven { // Architectury
+            name = "Shedaniel Maven"
+            url = "https://maven.shedaniel.me/"
+        }
+        maven {// FTB
+            name = "FTB Maven"
+            url = "https://maven.ftb.dev/releases/"
+        }
+    }
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+        mappings loom.officialMojangMappings()
+
+        compileOnly "org.projectlombok:lombok:1.18.42"
+        annotationProcessor "org.projectlombok:lombok:1.18.42"
+
+        compileOnly "dev.emi:emi-neoforge:${emi}:api"
+        runtimeOnly "dev.emi:emi-neoforge:${emi}"
+
+        implementation "curse.maven:xaeros-minimap-263420:6778051"
+        implementation "curse.maven:xaeros-world-map-317780:6778114"
+
+        implementation "dev.architectury:architectury-neoforge:${architectury}"
+        implementation "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"
+        implementation "dev.ftb.mods:ftb-teams-neoforge:${ftb_teams}"
+        implementation "dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks}"
+    }
+
+    java {
+        withSourcesJar()
+
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release = 21
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = base.archivesName.get()
+                from components.java
+            }
+        }
+
+        repositories {
+            
+        }
+    }
+}

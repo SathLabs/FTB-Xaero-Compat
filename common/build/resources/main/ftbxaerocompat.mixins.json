@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "dev.satherov.ftbxaerocompat.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+  ],
+  "mixins": [
+    "WorldMapSessionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

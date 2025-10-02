@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "ftbxaerocompat",
+  "version": "${version}",
+  "name": "FTB Chunks x Xaero's Map Compat",
+  "description": "Provides compatability between FTB Chunks and Xaeros world- and minimap",
+  "authors": [
+    "Satherov"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/ftbxaerocompat/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.satherov.ftbxaerocompat.fabric.FTBXaeroCompatFabric"
+    ],
+    "client": [
+      "dev.satherov.ftbxaerocompat.fabric.client.FTBXaeroCompatFabricClient"
+    ]
+  },
+  "mixins": [
+    "ftbxaerocompat.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.2",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "architectury": ">=13.0.8",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
