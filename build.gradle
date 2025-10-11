@@ -28,6 +28,10 @@ subprojects {
             name = "CurseMaven"
             url = "https://cursemaven.com"
         }
+        maven { // JEI
+            name = "Jared's maven"
+            url = "https://maven.blamejared.com/"
+        }
         maven { // EMI
             name = "TerraformersMC Maven"
             url = "https://maven.terraformersmc.com/"
@@ -49,31 +53,34 @@ subprojects {
     dependencies {
         minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
         mappings loom.officialMojangMappings()
-
-        compileOnly "org.projectlombok:lombok:1.18.42"
+        
+        modCompileOnly "org.projectlombok:lombok:1.18.42"
         annotationProcessor "org.projectlombok:lombok:1.18.42"
 
-        compileOnly "dev.emi:emi-neoforge:${emi}:api"
-        runtimeOnly "dev.emi:emi-neoforge:${emi}"
+        modCompileOnly "mezz.jei:jei-1.20.1-forge-api:15.20.0.116"
+        modRuntimeOnly "mezz.jei:jei-1.20.1-forge:15.20.0.116"
+        
+        modCompileOnly "dev.emi:emi-forge:${emi}:api"
+        modRuntimeOnly "dev.emi:emi-forge:${emi}"
 
-        implementation "curse.maven:xaeros-minimap-263420:6778051"
-        implementation "curse.maven:xaeros-world-map-317780:6778114"
+        modImplementation "curse.maven:xaeros-minimap-263420:6778028"
+        modImplementation "curse.maven:xaeros-world-map-317780:6778091"
 
-        implementation "dev.architectury:architectury-neoforge:${architectury}"
-        implementation "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"
-        implementation "dev.ftb.mods:ftb-teams-neoforge:${ftb_teams}"
-        implementation "dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks}"
+        modImplementation "dev.architectury:architectury-forge:${architectury}"
+        modImplementation "dev.ftb.mods:ftb-library-forge:${ftb_lib}"
+        modImplementation "dev.ftb.mods:ftb-teams-forge:${ftb_teams}"
+        modImplementation "dev.ftb.mods:ftb-chunks-forge:${ftb_chunks}"
     }
 
     java {
         withSourcesJar()
 
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
+        it.options.release = 17
     }
 
     publishing {
