@@ -4,20 +4,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
-import dev.ftb.mods.ftbchunks.api.ClaimedChunk;
-import dev.ftb.mods.ftbchunks.api.ClaimedChunkManager;
-import dev.ftb.mods.ftbchunks.api.FTBChunksAPI;
-import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
+import dev.ftb.mods.ftbchunks.client.map.MapChunk;
+import dev.ftb.mods.ftbchunks.client.map.MapDimension;
+import dev.ftb.mods.ftbchunks.client.map.MapRegion;
+import dev.ftb.mods.ftblibrary.math.XZ;
 import dev.ftb.mods.ftbteams.api.Team;
 import dev.ftb.mods.ftbteams.api.property.TeamProperties;
-import dev.ftb.mods.ftbteams.data.AbstractTeamBase;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import xaero.map.WorldMap;
 import xaero.map.highlight.ChunkHighlighter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 public class ClaimsHighlighter extends ChunkHighlighter {
     
     public ClaimsHighlighter() {
@@ -26,70 +28,68 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     
     @Override
     public boolean regionHasHighlights(ResourceKey<Level> key, int regionX, int regionZ) {
-        if (!WorldMap.settings.displayClaims) return false;
-        ClaimedChunkManager manager = FTBChunksAPI.api().getManager();
-        
-        final int baseX = regionX * 32;
-        final int baseZ = regionZ * 32;
-        
-        for (int dx = 0; dx < 32; dx++) {
-            for (int dz = 0; dz < 32; dz++) {
-                if (manager.getChunk(new ChunkDimPos(key, baseX + dx, baseZ + dz)) != null) {
-                    return true;
-                }
-            }
-        }
-        return false;
+       return true;
     }
     
     @Override
     public boolean chunkIsHighlit(ResourceKey<Level> key, int x, int z) {
         if (!WorldMap.settings.displayClaims) return false;
-        ChunkDimPos pos = new ChunkDimPos(key, x, z);
-        return FTBChunksAPI.api().getManager().getChunk(pos) != null;
+        Optional<MapDimension> opt = MapDimension.getCurrent();
+        if (opt.isEmpty()) return false;
+        MapChunk chunk = getChunk(opt.get(), x, z);
+        return chunk != null && chunk.getTeam().isPresent();
     }
     
     @Override
     protected int[] getColors(ResourceKey<Level> key, int x, int z) {
         if (!WorldMap.settings.displayClaims) return null;
+        Optional<MapDimension> opt = MapDimension.getCurrent();
+        if (opt.isEmpty()) return null;
+        MapDimension dim = opt.get();
         
-        ClaimedChunk chunk = FTBChunksAPI.api().getManager().getChunk(new ChunkDimPos(key, x, z));
-        if (chunk == null) return null;
+        MapChunk centerChunk = getChunk(dim, x, z);
+        if (centerChunk == null) return null;
         
-        ClaimedChunk top = FTBChunksAPI.api().getManager().getChunk(new ChunkDimPos(key, x, z - 1));
-        ClaimedChunk right = FTBChunksAPI.api().getManager().getChunk(new ChunkDimPos(key, x + 1, z));
-        ClaimedChunk bottom = FTBChunksAPI.api().getManager().getChunk(new ChunkDimPos(key, x, z + 1));
-        ClaimedChunk left = FTBChunksAPI.api().getManager().getChunk(new ChunkDimPos(key, x - 1, z));
+        Optional<Team> optTeam = centerChunk.getTeam();
+        if (optTeam.isEmpty()) return null;
+        Team team = optTeam.get();
         
-        int rgb = chunk.getTeamData().getTeam().getProperties().get(TeamProperties.COLOR).rgb() & 0xFFFFFF;
+        MapChunk top    = getChunk(dim, x, z - 1);
+        MapChunk right  = getChunk(dim, x + 1, z);
+        MapChunk bottom = getChunk(dim, x, z + 1);
+        MapChunk left   = getChunk(dim, x - 1, z);
         
+        int rgb = team.getProperties().get(TeamProperties.COLOR).rgb() & 0xFFFFFF;
         int packed = ((rgb & 0xFF) << 24) | ((rgb >> 8 & 0xFF) << 16) | ((rgb >> 16 & 0xFF) << 8);
         int fillOpacity = 255 * WorldMap.settings.claimsFillOpacity / 100;
         int borderOpacity = 255 * WorldMap.settings.claimsBorderOpacity / 100;
         
-        int center  = (packed & 0xFFFFFF00) | fillOpacity;
-        int side    = (packed & 0xFFFFFF00) | borderOpacity;
+        int fill  = (packed & 0xFFFFFF00) | fillOpacity;
+        int edge  = (packed & 0xFFFFFF00) | borderOpacity;
         
-        this.resultStore[0] = center;
-        this.resultStore[1] = sameOwner(top, chunk) ? center : side;
-        this.resultStore[2] = sameOwner(right, chunk) ? center : side;
-        this.resultStore[3] = sameOwner(bottom, chunk) ? center : side;
-        this.resultStore[4] = sameOwner(left, chunk) ? center : side;
-        
+        this.resultStore[0] = fill;
+        this.resultStore[1] = sameOwner(top, centerChunk)    ? fill : edge;   // top
+        this.resultStore[2] = sameOwner(right, centerChunk)  ? fill : edge;   // right
+        this.resultStore[3] = sameOwner(bottom, centerChunk) ? fill : edge;   // bottom
+        this.resultStore[4] = sameOwner(left, centerChunk)   ? fill : edge;   // left
         return this.resultStore;
     }
     
-    private static boolean sameOwner(ClaimedChunk a, ClaimedChunk b) {
+    
+    private static boolean sameOwner(MapChunk a, MapChunk b) {
         if (a == null || b == null) return false;
-        return a.getTeamData().getTeam().getId().equals(b.getTeamData().getTeam().getId());
+        Optional<Team> aTeam = a.getTeam();
+        Optional<Team> bTeam = b.getTeam();
+        if (aTeam.isEmpty() || bTeam.isEmpty()) return false;
+        return aTeam.get().getId().equals(bTeam.get().getId());
     }
     
     @Override
     public int calculateRegionHash(ResourceKey<Level> key, int regionX, int regionZ) {
         if (!WorldMap.settings.displayClaims) return 0;
-        
-        ClaimedChunkManager manager = FTBChunksAPI.api().getManager();
-        if (manager == null) return 0;
+        Optional<MapDimension> opt = MapDimension.getCurrent();
+        if (opt.isEmpty()) return 0;
+        MapDimension dim = opt.get();
         
         final int chunkX = regionX * 32;
         final int chunkZ = regionZ * 32;
@@ -98,25 +98,28 @@ public class ClaimsHighlighter extends ChunkHighlighter {
         acc = acc * 37L + WorldMap.settings.claimsBorderOpacity;
         acc = acc * 37L + WorldMap.settings.claimsFillOpacity;
         
-        
         for (int i = 0; i < 32; i++) {
-            acc = accountChunk(acc, manager.getChunk(new ChunkDimPos(key, chunkX + i, chunkZ - 1)));
-            acc = accountChunk(acc, manager.getChunk(new ChunkDimPos(key, chunkX + 32, chunkZ + i)));
-            acc = accountChunk(acc, manager.getChunk(new ChunkDimPos(key, chunkX + i, chunkZ + 32)));
-            acc = accountChunk(acc, manager.getChunk(new ChunkDimPos(key, chunkX - 1, chunkZ + i)));
+            acc = accountChunk(acc, getChunk(dim, chunkX + i, chunkZ - 1));   // top neighbor row
+            acc = accountChunk(acc, getChunk(dim, chunkX + 32, chunkZ + i));  // right neighbor col
+            acc = accountChunk(acc, getChunk(dim, chunkX + i, chunkZ + 32));  // bottom neighbor row
+            acc = accountChunk(acc, getChunk(dim, chunkX - 1, chunkZ + i));   // left neighbor col
             
             for (int j = 0; j < 32; j++) {
-                ClaimedChunk c = manager.getChunk(new ChunkDimPos(key, chunkX + i, chunkZ + j));
-                acc = accountChunk(acc, c);
+                acc = accountChunk(acc, getChunk(dim, chunkX + i, chunkZ + j));
             }
         }
         
-        return (int) (acc >> 32) * 37 + (int) (acc & 0xFFFFFFFFL);
+        return (int)(acc >> 32) * 37 + (int)(acc & 0xFFFFFFFFL);
     }
     
-    private long accountChunk(long acc, @Nullable ClaimedChunk chunk) {
+    
+    private long accountChunk(long acc, @Nullable MapChunk chunk) {
         if (chunk != null) {
-            Team team = chunk.getTeamData().getTeam();
+            Optional<Team> optional = chunk.getTeam();
+            if (optional.isEmpty()) return acc * 37L;
+            
+            Team team = optional.get();
+            
             UUID teamId = team.getId();
             int color = team.getProperties().get(TeamProperties.COLOR).rgb();
             
@@ -128,7 +131,7 @@ public class ClaimsHighlighter extends ChunkHighlighter {
             acc += color;
             acc *= 37L;
             
-            acc += chunk.isForceLoaded() ? 1L : 0L;
+            acc += chunk.getForceLoadedDate().isPresent() ? 1L : 0L;
             acc *= 37L;
         }
         return acc * 37L;
@@ -137,11 +140,13 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     
     @Override
     public Component getChunkHighlightSubtleTooltip(ResourceKey<Level> key, int x, int z) {
-        ClaimedChunk chunk = FTBChunksAPI.api().getManager().getChunk(new ChunkDimPos(key, x, z));
+        Optional<MapDimension> opt = MapDimension.getCurrent();
+        if (opt.isEmpty()) return null;
+        MapChunk chunk = getChunk(opt.get(), x, z);
         if (chunk == null) return null;
-        AbstractTeamBase team = (AbstractTeamBase) chunk.getTeamData().getTeam();
-        return Component.literal(team.getDisplayName());
+        return chunk.getTeam().map(Team::getColoredName).orElse(Component.empty());
     }
+    
     
     @Override
     public Component getChunkHighlightBluntTooltip(ResourceKey<Level> resourceKey, int x, int t) {
@@ -150,4 +155,11 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     
     @Override
     public void addMinimapBlockHighlightTooltips(List<Component> list, ResourceKey<Level> resourceKey, int x, int z, int width) { }
+    
+    @Nullable
+    private static MapChunk getChunk(MapDimension dim, int chunkX, int chunkZ) {
+        MapRegion r = dim.getRegion(XZ.regionFromChunk(chunkX, chunkZ));
+        return r.getChunkForAbsoluteChunkPos(XZ.of(chunkX, chunkZ));
+    }
+    
 }

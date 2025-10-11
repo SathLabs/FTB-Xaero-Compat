@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import xaero.map.WorldMapSession;
 import xaero.map.highlight.HighlighterRegistry;
 
-@Mixin(WorldMapSession.class)
+@Mixin(value = WorldMapSession.class, remap = false)
 public class WorldMapSessionMixin {
     
     @Redirect(
@@ -16,7 +16,8 @@ public class WorldMapSessionMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lxaero/map/highlight/HighlighterRegistry;end()V" 
-            )
+            ),
+            remap = false
     )
     private void injectBeforeEnd(HighlighterRegistry instance) {
         FTBXaeroCompat.registerHighlighters(instance);

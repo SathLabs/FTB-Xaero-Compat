@@ -44,6 +44,10 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
+        mixin {
+            useLegacyMixinAp = true
+            defaultRefmapName = "ftbxaerocompat.refmap.json"
+        }
     }
 
     dependencies {

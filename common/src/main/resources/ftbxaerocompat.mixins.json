@@ -3,11 +3,12 @@
   "package": "dev.satherov.ftbxaerocompat.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
+  "refmap": "ftbxaerocompat.refmap.json",
   "client": [
-  ],
-  "mixins": [
+    "FTBChunksClientMixin",
     "WorldMapSessionMixin"
   ],
+  "mixins": [ ],
   "injectors": {
     "defaultRequire": 1
   }
