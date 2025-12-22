@@ -8,18 +8,17 @@
     "Satherov"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/Satherov/FTB-Xaero-Compat"
   },
   "license": "CC0-1.0",
-  "icon": "assets/ftbxaerocompat/icon.png",
+  "icon": "assets/ftbxaerocompat/logo.png",
   "environment": "*",
   "entrypoints": {
     "main": [
       "dev.satherov.ftbxaerocompat.fabric.FTBXaeroCompatFabric"
     ],
     "client": [
-      "dev.satherov.ftbxaerocompat.fabric.client.FTBXaeroCompatFabricClient"
+      "dev.satherov.ftbxaerocompat.fabric.FTBXaeroCompatFabricClient"
     ]
   },
   "mixins": [
@@ -27,9 +26,9 @@
   ],
   "depends": {
     "fabricloader": ">=0.17.2",
-    "minecraft": "~1.21.1",
-    "java": ">=21",
-    "architectury": ">=13.0.8",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "architectury": ">=9.2.0",
     "fabric-api": "*"
   },
   "suggests": {
