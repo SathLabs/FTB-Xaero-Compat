@@ -1,6 +1,7 @@
 package dev.satherov.ftbxaerocompat;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
@@ -28,7 +29,10 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     
     @Override
     public boolean regionHasHighlights(ResourceKey<Level> key, int regionX, int regionZ) {
-       return true;
+        Optional<MapDimension> opt = MapDimension.getCurrent();
+        if (opt.isEmpty()) return false;
+        MapDimension dim = opt.get();
+        return !dim.getRegion(XZ.of(regionX, regionZ)).getModifiedChunks().isEmpty();
     }
     
     @Override
@@ -141,10 +145,19 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     @Override
     public Component getChunkHighlightSubtleTooltip(ResourceKey<Level> key, int x, int z) {
         Optional<MapDimension> opt = MapDimension.getCurrent();
-        if (opt.isEmpty()) return null;
+        if (opt.isEmpty()) return Component.empty();
+        
         MapChunk chunk = getChunk(opt.get(), x, z);
-        if (chunk == null) return null;
-        return chunk.getTeam().map(Team::getColoredName).orElse(Component.empty());
+        if (chunk == null) return Component.empty();
+        
+        Optional<Team> optional = chunk.getTeam();
+        if (optional.isEmpty()) return Component.empty();
+        
+        Team team = optional.get();
+        MutableComponent component = Component.empty().withStyle(team.getProperty(TeamProperties.COLOR).toStyle());
+        component.append(team.getColoredName());
+        if (chunk.getForceLoadedDate().isPresent()) component.append(Component.literal(" □ ").append(Component.translatable("ftbchunks.gui.force_loaded")));
+        return component;
     }
     
     

@@ -58,15 +58,14 @@ subprojects {
         annotationProcessor "org.projectlombok:lombok:1.18.42"
 
         compileOnly "dev.emi:emi-neoforge:${emi}:api"
-        runtimeOnly "dev.emi:emi-neoforge:${emi}"
 
-        implementation "curse.maven:xaeros-minimap-263420:6778051"
-        implementation "curse.maven:xaeros-world-map-317780:6778114"
+        compileOnly "curse.maven:xaeros-minimap-263420:6778051"
+        compileOnly "curse.maven:xaeros-world-map-317780:6778114"
 
-        implementation "dev.architectury:architectury-neoforge:${architectury}"
-        implementation "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"
-        implementation "dev.ftb.mods:ftb-teams-neoforge:${ftb_teams}"
-        implementation "dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks}"
+        compileOnly "dev.architectury:architectury-neoforge:${architectury}"
+        compileOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"
+        compileOnly "dev.ftb.mods:ftb-teams-neoforge:${ftb_teams}"
+        compileOnly "dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks}"
     }
 
     java {

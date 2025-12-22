@@ -39,6 +39,16 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
+
+    runtimeOnly "dev.emi:emi-neoforge:${emi}"
+
+    runtimeOnly "curse.maven:xaeros-minimap-263420:6778051"
+    runtimeOnly "curse.maven:xaeros-world-map-317780:6778114"
+
+    runtimeOnly "dev.architectury:architectury-neoforge:${architectury}"
+    runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"
+    runtimeOnly "dev.ftb.mods:ftb-teams-neoforge:${ftb_teams}"
+    runtimeOnly "dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks}"
 }
 
 processResources {

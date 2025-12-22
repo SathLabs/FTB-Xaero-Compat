@@ -1,4 +1,4 @@
-package dev.satherov.ftbxaerocompat.fabric.client;
+package dev.satherov.ftbxaerocompat.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
 
