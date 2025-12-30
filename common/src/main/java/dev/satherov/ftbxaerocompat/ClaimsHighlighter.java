@@ -32,7 +32,7 @@ public class ClaimsHighlighter extends ChunkHighlighter {
         Optional<MapDimension> opt = MapDimension.getCurrent();
         if (opt.isEmpty()) return false;
         MapDimension dim = opt.get();
-        return !dim.getRegion(XZ.of(regionX, regionZ)).getModifiedChunks().isEmpty();
+        return dim.getRegions().get(XZ.of(regionX, regionZ)) != null;
     }
     
     @Override
