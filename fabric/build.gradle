@@ -36,8 +36,9 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
-    modRuntimeOnly "curse.maven:xaeros-minimap-263420:6778038"
-    modRuntimeOnly "curse.maven:xaeros-world-map-317780:6778093"
+    modRuntimeOnly "xaero.lib:xaerolib-fabric-1.20:1.0.42"
+    modRuntimeOnly "curse.maven:xaeros-minimap-263420:7400977"
+    modRuntimeOnly "curse.maven:xaeros-world-map-317780:7401085"
 
     modRuntimeOnly "dev.architectury:architectury-fabric:${architectury}"
     modRuntimeOnly "dev.ftb.mods:ftb-library-fabric:${ftb_lib}"
