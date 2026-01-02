@@ -40,6 +40,10 @@ subprojects {
             name = "FTB Maven"
             url = "https://maven.ftb.dev/releases/"
         }
+        maven {// Xaero lib
+            url "https://chocolateminecraft.com/maven"
+            name "Xaero's Maven"
+        }
     }
 
     loom {
@@ -59,8 +63,9 @@ subprojects {
 
         compileOnly "dev.emi:emi-neoforge:${emi}:api"
 
-        compileOnly "curse.maven:xaeros-minimap-263420:6778051"
-        compileOnly "curse.maven:xaeros-world-map-317780:6778114"
+        compileOnly "xaero.lib:xaerolib-neoforge-1.21:${lib}"
+        compileOnly "curse.maven:xaeros-minimap-263420:${minimap}"
+        compileOnly "curse.maven:xaeros-world-map-317780:${worldmap}"
 
         compileOnly "dev.architectury:architectury-neoforge:${architectury}"
         compileOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"

@@ -14,6 +14,7 @@ import dev.ftb.mods.ftbteams.api.property.TeamProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import xaero.map.WorldMap;
+import xaero.map.common.config.option.WorldMapProfiledConfigOptions;
 import xaero.map.highlight.ChunkHighlighter;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     
     @Override
     public boolean chunkIsHighlit(ResourceKey<Level> key, int x, int z) {
-        if (!WorldMap.settings.displayClaims) return false;
+        if (!WorldMap.INSTANCE.getConfigs().getClientConfigManager().getEffective(WorldMapProfiledConfigOptions.OPAC_CLAIMS)) return false;
         Optional<MapDimension> opt = MapDimension.getCurrent();
         if (opt.isEmpty()) return false;
         MapChunk chunk = getChunk(opt.get(), x, z);
@@ -46,7 +47,7 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     
     @Override
     protected int[] getColors(ResourceKey<Level> key, int x, int z) {
-        if (!WorldMap.settings.displayClaims) return null;
+        if (!WorldMapProfiledConfigOptions.OPAC_CLAIMS.getDefaultValue()) return null;
         Optional<MapDimension> opt = MapDimension.getCurrent();
         if (opt.isEmpty()) return null;
         MapDimension dim = opt.get();
@@ -65,8 +66,8 @@ public class ClaimsHighlighter extends ChunkHighlighter {
         
         int rgb = team.getProperties().get(TeamProperties.COLOR).rgb() & 0xFFFFFF;
         int packed = ((rgb & 0xFF) << 24) | ((rgb >> 8 & 0xFF) << 16) | ((rgb >> 16 & 0xFF) << 8);
-        int fillOpacity = 255 * WorldMap.settings.claimsFillOpacity / 100;
-        int borderOpacity = 255 * WorldMap.settings.claimsBorderOpacity / 100;
+        int fillOpacity = 255 * WorldMap.INSTANCE.getConfigs().getClientConfigManager().getEffective(WorldMapProfiledConfigOptions.OPAC_CLAIMS_FILL_OPACITY) / 100;
+        int borderOpacity = 255 * WorldMap.INSTANCE.getConfigs().getClientConfigManager().getEffective(WorldMapProfiledConfigOptions.OPAC_CLAIMS_BORDER_OPACITY) / 100;
         
         int fill  = (packed & 0xFFFFFF00) | fillOpacity;
         int edge  = (packed & 0xFFFFFF00) | borderOpacity;
@@ -90,7 +91,7 @@ public class ClaimsHighlighter extends ChunkHighlighter {
     
     @Override
     public int calculateRegionHash(ResourceKey<Level> key, int regionX, int regionZ) {
-        if (!WorldMap.settings.displayClaims) return 0;
+        if (!WorldMap.INSTANCE.getConfigs().getClientConfigManager().getEffective(WorldMapProfiledConfigOptions.OPAC_CLAIMS)) return 0;
         Optional<MapDimension> opt = MapDimension.getCurrent();
         if (opt.isEmpty()) return 0;
         MapDimension dim = opt.get();
@@ -99,8 +100,8 @@ public class ClaimsHighlighter extends ChunkHighlighter {
         final int chunkZ = regionZ * 32;
         
         long acc = 0L;
-        acc = acc * 37L + WorldMap.settings.claimsBorderOpacity;
-        acc = acc * 37L + WorldMap.settings.claimsFillOpacity;
+        acc = acc * 37L + WorldMap.INSTANCE.getConfigs().getClientConfigManager().getEffective(WorldMapProfiledConfigOptions.OPAC_CLAIMS_BORDER_OPACITY);
+        acc = acc * 37L + WorldMap.INSTANCE.getConfigs().getClientConfigManager().getEffective(WorldMapProfiledConfigOptions.OPAC_CLAIMS_FILL_OPACITY);
         
         for (int i = 0; i < 32; i++) {
             acc = accountChunk(acc, getChunk(dim, chunkX + i, chunkZ - 1));   // top neighbor row

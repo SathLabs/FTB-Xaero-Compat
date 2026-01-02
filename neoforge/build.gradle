@@ -42,8 +42,8 @@ dependencies {
 
     runtimeOnly "dev.emi:emi-neoforge:${emi}"
 
-    runtimeOnly "curse.maven:xaeros-minimap-263420:6778051"
-    runtimeOnly "curse.maven:xaeros-world-map-317780:6778114"
+    runtimeOnly "curse.maven:xaeros-minimap-263420:${minimap}"
+    runtimeOnly "curse.maven:xaeros-world-map-317780:${worldmap}"
 
     runtimeOnly "dev.architectury:architectury-neoforge:${architectury}"
     runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"
