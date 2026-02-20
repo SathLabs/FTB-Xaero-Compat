@@ -2,6 +2,8 @@ package dev.satherov.ftbxaerocompat.mixin;
 
 import lombok.extern.slf4j.Slf4j;
 
+import dev.satherov.ftbxaerocompat.duck.MapWorldDuck;
+
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
@@ -17,6 +19,7 @@ import dev.ftb.mods.ftbchunks.client.map.MapRegion;
 import dev.ftb.mods.ftbchunks.data.ChunkSyncInfo;
 import xaero.map.WorldMapSession;
 import xaero.map.world.MapDimension;
+import xaero.map.world.MapWorld;
 
 import java.util.Date;
 import java.util.UUID;
@@ -37,10 +40,11 @@ public class MapChunkMixin {
     public void updateFromServer(Date now, ChunkSyncInfo packet, UUID teamId, CallbackInfo ci) {
         WorldMapSession session = WorldMapSession.getCurrentSession();
         ResourceKey<Level> dimId = region.dimension.dimension;
-        MapDimension dim = session.getMapProcessor().getMapWorld().getDimension(dimId);
+        MapWorld world = session.getMapProcessor().getMapWorld();
+        MapDimension dim = world.getDimension(dimId);
         
         if (dim == null) {
-            log.warn("No dimension found for {}", dimId);
+            if (((MapWorldDuck) world).ftbxaerocompat$isLoaded()) log.warn("No dimension found for {}", dimId);
             return;
         }
         

@@ -9,6 +9,7 @@
     "WorldMapSessionMixin"
   ],
   "mixins": [
+    "MapWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
