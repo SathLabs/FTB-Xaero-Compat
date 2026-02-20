@@ -8,7 +8,9 @@
     "MapChunkMixin",
     "WorldMapSessionMixin"
   ],
-  "mixins": [ ],
+  "mixins": [
+    "MapWorldMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

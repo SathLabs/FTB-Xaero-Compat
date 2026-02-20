@@ -15,14 +15,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import dev.ftb.mods.ftbchunks.client.map.MapChunk;
 import dev.ftb.mods.ftbchunks.client.map.MapRegion;
 import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
+import dev.satherov.ftbxaerocompat.duck.MapWorldDuck;
 import xaero.map.WorldMapSession;
 import xaero.map.world.MapDimension;
+import xaero.map.world.MapWorld;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
-@Mixin(MapChunk.class)
+@Mixin(value = MapChunk.class, remap = false)
 public class MapChunkMixin {
     
     @Shadow
@@ -37,10 +39,11 @@ public class MapChunkMixin {
     public void updateFromServer(Date now, SendChunkPacket.SingleChunk chunk, UUID teamId, CallbackInfo ci) {
         WorldMapSession session = WorldMapSession.getCurrentSession();
         ResourceKey<Level> dimId = region.dimension.dimension;
-        MapDimension dim = session.getMapProcessor().getMapWorld().getDimension(dimId);
+        MapWorld world = session.getMapProcessor().getMapWorld();
+        MapDimension dim = world.getDimension(dimId);
         
         if (dim == null) {
-            log.warn("No dimension found for {}", dimId);
+            if (((MapWorldDuck) world).ftbxaerocompat$isLoaded()) log.warn("No dimension found for {}", dimId);
             return;
         }
         
