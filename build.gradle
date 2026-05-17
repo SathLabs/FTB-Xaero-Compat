@@ -67,6 +67,10 @@ subprojects {
         compileOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"
         compileOnly "dev.ftb.mods:ftb-teams-neoforge:${ftb_teams}"
         compileOnly "dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks}"
+
+        compileOnly "xaero.lib:xaerolib-neoforge-1.21.1:${lib}"
+        compileOnly "xaero.map:xaeroworldmap-neoforge-1.21.1:${worldmap}"
+        compileOnly "xaero.minimap:xaerominimap-neoforge-1.21.1:${minimap}"
     }
 
     java {

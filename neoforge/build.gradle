@@ -42,9 +42,9 @@ dependencies {
 
     runtimeOnly "dev.emi:emi-neoforge:${emi}"
 
-    modImplementation "xaero.lib:xaerolib-neoforge-1.21:${lib}"
-    modImplementation "curse.maven:xaeros-minimap-263420:${minimap}"
-    modImplementation "curse.maven:xaeros-world-map-317780:${worldmap}"
+    modImplementation "xaero.lib:xaerolib-neoforge-1.21.1:${lib}"
+    modImplementation "xaero.map:xaeroworldmap-neoforge-1.21.1:${worldmap}"
+    modImplementation "xaero.minimap:xaerominimap-neoforge-1.21.1:${minimap}"
 
     runtimeOnly "dev.architectury:architectury-neoforge:${architectury}"
     runtimeOnly "dev.ftb.mods:ftb-library-neoforge:${ftb_lib}"

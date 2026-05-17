@@ -107,6 +107,11 @@ public class FTBClaimMenu {
                     .collect(Collectors.toSet());
             
             KnownClientPlayer player = ClientTeamManagerImpl.getInstance().self();
+            if (player == null) {
+                FTBXaeroCompat.log.error("Could not find local player in FTBTeams, map options will not be available!");
+                return;
+            }
+            
             Optional<Team> optionalTeam = ClientTeamManagerImpl.getInstance().getTeamByID(player.teamId());
             final boolean admin = Minecraft.getInstance().isSingleplayer() || (Minecraft.getInstance().player.hasPermissions(2) && optionalTeam.isPresent() && player.extraData().getBoolean("BypassFTBChunksProtection"));
             
