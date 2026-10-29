@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "ftbxaerocompat",
+  "version": "${version}",
+  "name": "FTB Chunks x Xaero's Map Compat",
+  "description": "Shows FTB Chunks claims on Xaero's world map and minimap and claims chunks from the world map.",
+  "authors": [
+    "Satherov"
+  ],
+  "contact": {
+    "sources": "https://github.com/SathLabs/FTB-Xaero-Compat",
+    "issues": "https://github.com/SathLabs/FTB-Xaero-Compat/issues"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/ftbxaerocompat/logo.png",
+  "environment": "client",
+  "mixins": [
+    {
+      "config": "ftbxaerocompat.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=${java_version}",
+    "fabric-api": "*",
+    "architectury": "*",
+    "ftbchunks": "*",
+    "xaeroworldmap": "*"
+  },
+  "suggests": {
+    "xaerominimap": "*"
+  }
+}

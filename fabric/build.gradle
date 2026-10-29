@@ -1,0 +1,59 @@
+plugins {
+    id 'com.gradleup.shadow'
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api}"
+
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+
+    modImplementation("dev.architectury:architectury-fabric:${architectury}") { transitive = false }
+    modImplementation("dev.ftb.mods:ftb-library-fabric:${ftb_library}") { transitive = false }
+    modImplementation("dev.ftb.mods:ftb-teams-fabric:${ftb_teams}") { transitive = false }
+    modImplementation("dev.ftb.mods:ftb-chunks-fabric:${ftb_chunks}") { transitive = false }
+    modImplementation("xaero.lib:xaerolib-fabric-${minecraft_version}:${xaero_lib}") { transitive = false }
+    modImplementation("xaero.map:xaeroworldmap-fabric-${minecraft_version}:${xaero_worldmap}") { transitive = false }
+    modLocalRuntime("xaero.minimap:xaerominimap-fabric-${minecraft_version}:${xaero_minimap}") { transitive = false }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_version', minecraft_version
+    inputs.property 'java_version', java_version
+    inputs.property 'fabric_loader', fabric_loader
+
+    filesMatching('fabric.mod.json') {
+        expand version: project.version, minecraft_version: minecraft_version, java_version: java_version, fabric_loader: fabric_loader
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+}
