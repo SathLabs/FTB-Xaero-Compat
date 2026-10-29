@@ -1,0 +1,65 @@
+plugins {
+    id 'com.gradleup.shadow'
+}
+
+loom {
+    forge {
+        mixinConfig 'ftbxaerocompat.mixins.json'
+    }
+}
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${forge}"
+
+    common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionForge')
+
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixinextras}"))
+
+    modImplementation("dev.architectury:architectury-forge:${architectury}") { transitive = false }
+    modImplementation("dev.ftb.mods:ftb-library-forge:${ftb_library}") { transitive = false }
+    modImplementation("dev.ftb.mods:ftb-teams-forge:${ftb_teams}") { transitive = false }
+    modImplementation("dev.ftb.mods:ftb-chunks-forge:${ftb_chunks}") { transitive = false }
+    modImplementation("xaero.lib:xaerolib-forge-${minecraft_version}:${xaero_lib}") { transitive = false }
+    modImplementation("xaero.map:xaeroworldmap-forge-${minecraft_version}:${xaero_worldmap}") { transitive = false }
+    modLocalRuntime("xaero.minimap:xaerominimap-forge-${minecraft_version}:${xaero_minimap}") { transitive = false }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_version', minecraft_version
+    inputs.property 'forge_range', forge_range
+
+    filesMatching('META-INF/mods.toml') {
+        expand version: project.version, minecraft_version: minecraft_version, forge_range: forge_range
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+}

@@ -1,0 +1,14 @@
+.gradle/
+.architectury-transformer/
+build/
+out/
+run/
+runs/
+logs/
+
+.idea/
+.vscode/
+*.iml
+
+docs/
+notes/

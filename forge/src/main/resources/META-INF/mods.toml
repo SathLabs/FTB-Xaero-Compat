@@ -1,0 +1,57 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "LGPL-3.0"
+issueTrackerURL = "https://github.com/SathLabs/FTB-Xaero-Compat/issues"
+
+[[mods]]
+modId = "ftbxaerocompat"
+version = "${version}"
+displayName = "FTB Chunks x Xaero's Map Compat"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/ftbxaerocompat"
+logoFile = "assets/ftbxaerocompat/logo.png"
+authors = "Satherov"
+description = '''
+Shows FTB Chunks claims on Xaero's world map and minimap and claims chunks from the world map.
+'''
+
+[[dependencies.ftbxaerocompat]]
+modId = "forge"
+mandatory = true
+versionRange = "${forge_range}"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.ftbxaerocompat]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.ftbxaerocompat]]
+modId = "architectury"
+mandatory = true
+versionRange = "*"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.ftbxaerocompat]]
+modId = "ftbchunks"
+mandatory = true
+versionRange = "*"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.ftbxaerocompat]]
+modId = "xaeroworldmap"
+mandatory = true
+versionRange = "*"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.ftbxaerocompat]]
+modId = "xaerominimap"
+mandatory = false
+versionRange = "*"
+ordering = "AFTER"
+side = "CLIENT"

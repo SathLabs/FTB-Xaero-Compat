@@ -1,0 +1,14 @@
+architectury {
+    common enabled_platforms.split(',')
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader}"
+
+    modCompileOnly("dev.architectury:architectury-fabric:${architectury}") { transitive = false }
+    modCompileOnly("dev.ftb.mods:ftb-library-fabric:${ftb_library}") { transitive = false }
+    modCompileOnly("dev.ftb.mods:ftb-teams-fabric:${ftb_teams}") { transitive = false }
+    modCompileOnly("dev.ftb.mods:ftb-chunks-fabric:${ftb_chunks}") { transitive = false }
+    modCompileOnly("xaero.lib:xaerolib-fabric-${minecraft_version}:${xaero_lib}") { transitive = false }
+    modCompileOnly("xaero.map:xaeroworldmap-fabric-${minecraft_version}:${xaero_worldmap}") { transitive = false }
+}
