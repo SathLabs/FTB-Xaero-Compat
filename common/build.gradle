@@ -10,4 +10,5 @@ dependencies {
     compileOnly("dev.ftb.mods:ftb-chunks-fabric:${ftb_chunks}") { transitive = false }
     compileOnly("xaero.lib:xaerolib-fabric-${minecraft_version}:${xaero_lib}") { transitive = false }
     compileOnly("xaero.map:xaeroworldmap-fabric-${minecraft_version}:${xaero_worldmap}") { transitive = false }
+    compileOnly("xaero.minimap:xaerominimap-fabric-${minecraft_version}:${xaero_minimap}") { transitive = false }
 }

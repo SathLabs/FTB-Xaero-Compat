@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_25",
   "client": [
     "GuiMapMixin",
+    "GuiMinimapOverlaysSettingsMixin",
+    "HudModConfigClientRegistryHandlerMixin",
+    "HudModConfigCommonRegistryHandlerMixin",
     "MapChunkMixin",
     "MapWorldMixin",
     "WorldMapSessionMixin"
