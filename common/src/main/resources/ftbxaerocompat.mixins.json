@@ -9,6 +9,7 @@
     "HudModConfigCommonRegistryHandlerMixin",
     "MapChunkMixin",
     "MapWorldMixin",
+    "SupportXaeroMinimapMixin",
     "WorldMapSessionMixin"
   ],
   "injectors": {
