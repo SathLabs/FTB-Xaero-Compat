@@ -1,0 +1,73 @@
+plugins {
+    id 'com.gradleup.shadow'
+}
+
+architectury {
+    platformSetupLoomIde()
+    neoForge()
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+repositories {
+    maven {
+        name = 'NeoForged'
+        url = 'https://maven.neoforged.net/releases'
+    }
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${neoforge}"
+
+    common(project(path: ':common')) { transitive = false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
+
+    implementation("dev.ftb.mods:ftb-library-neoforge:${ftb_library}") { transitive = false }
+    implementation("dev.ftb.mods:ftb-teams-neoforge:${ftb_teams}") { transitive = false }
+    implementation("dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks}") { transitive = false }
+    implementation("xaero.lib:xaerolib-neoforge-${minecraft_version}:${xaero_lib}") { transitive = false }
+    implementation("xaero.map:xaeroworldmap-neoforge-${minecraft_version}:${xaero_worldmap}") { transitive = false }
+    localRuntime("xaero.minimap:xaerominimap-neoforge-${minecraft_version}:${xaero_minimap}") { transitive = false }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'minecraft_version', minecraft_version
+    inputs.property 'neoforge_range', neoforge_range
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand version: project.version, minecraft_version: minecraft_version, neoforge_range: neoforge_range
+    }
+}
+
+jar {
+    archiveClassifier = 'raw'
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = ''
+}
+
+shadow.addShadowVariantIntoJavaComponent = false
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact shadowJar
+        }
+    }
+}
