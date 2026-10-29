@@ -3,6 +3,7 @@
   "package": "dev.satherov.ftbxaerocompat.mixin",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "GuiMapMixin",
     "MapChunkMixin",
     "MapWorldMixin",
     "WorldMapSessionMixin"
