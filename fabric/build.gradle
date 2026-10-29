@@ -1,5 +1,6 @@
 plugins {
     id 'com.gradleup.shadow'
+    id 'com.hypherionmc.modutils.modpublisher'
 }
 
 architectury {
@@ -56,4 +57,22 @@ shadowJar {
 
 remapJar {
     inputFile.set shadowJar.archiveFile
+}
+
+publisher {
+    curseID = '1357724'
+    displayName = "[Fabric] ${mod_name} ${project.version}"
+    artifact = remapJar
+    setLoaders('fabric')
+    setGameVersions(minecraft_version)
+    setCurseEnvironment('client')
+
+    github {
+        repo = 'SathLabs/FTB-Xaero-Compat'
+    }
+
+    curseDepends {
+        required 'ftb-chunks-forge', 'xaeros-world-map'
+        optional 'xaeros-minimap'
+    }
 }
