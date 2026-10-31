@@ -1,0 +1,1 @@
+- Fixed a startup crash with MixinExtras versions older than 0.5.5
