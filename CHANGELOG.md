@@ -1,3 +1,7 @@
+# 1.4.0+26.1.2
+
+- Fixed a startup crash with MixinExtras versions older than 0.5.5
+
 # 1.3.0+26.1.2
 
 - Rework internals to match across all versions
